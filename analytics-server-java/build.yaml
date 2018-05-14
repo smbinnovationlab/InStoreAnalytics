@@ -1,0 +1,13 @@
+name: shop-analytics-camera
+kind: service
+tasks:
+  - name: prebuild
+    command:
+      - echo "do Nothing....."
+  - name: build
+    command:
+      - echo "do Nothing....."
+  - name: codescan
+    command: echo 'Nothing to do...'
+  - name: postbuild
+    command: echo "skip post build..."

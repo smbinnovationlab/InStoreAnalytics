@@ -1,0 +1,29 @@
+<FragmentDefinition
+    xmlns="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds">
+    <viz:VizFrame
+        id="densityChart"
+        width="100%"
+        vizType="heatmap"
+        busyIndicatorDelay="0">
+        <viz:dataset>
+            <viz.data:FlattenedDataset data="{}">
+                <viz.data:dimensions>
+                    <viz.data:DimensionDefinition name="YAxis" value="{yAxis}"/>
+                    <viz.data:DimensionDefinition name="XAxis" value="{xAxis}"/>
+                </viz.data:dimensions>
+                <viz.data:measures>
+                    <viz.data:MeasureDefinition name="Value" value="{number}"/>
+                </viz.data:measures>
+            </viz.data:FlattenedDataset>
+        </viz:dataset>
+        <viz:feeds>
+            <viz.feeds:FeedItem uid="color" type="Measure" values="Value"/>
+            <viz.feeds:FeedItem uid="categoryAxis2" type="Dimension" values="YAxis"/>
+            <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="XAxis"/>
+        </viz:feeds>
+    </viz:VizFrame>
+</FragmentDefinition>

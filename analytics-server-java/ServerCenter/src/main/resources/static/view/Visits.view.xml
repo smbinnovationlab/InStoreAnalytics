@@ -1,0 +1,131 @@
+<mvc:View
+    controllerName="sap.sme.ilab.shopAna.controller.Visits"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    displayBlock="true"
+    height="100%">
+    <ScrollContainer
+		height="100%"
+		width="100%"
+		horizontal="false"
+		vertical="true">
+        <!-- <l:VerticalLayout width="100%" class="cardContainer">
+            <Text text="Recent visitors ({/peopleCount})" class="sapUiSmallMargin cardTitle"/>
+            <Carousel 
+                id="imageCarousel" 
+                class="sapUiSmallMarginBegin sapUiSmallMarginEnd imageCarousel"
+                pages="{/avatarGroups}">
+                <FlexBox items="{path:'', templateShareable:true}">
+                    <Image src="{img}" class="carouselImg"/>
+                </FlexBox>
+            </Carousel>
+        </l:VerticalLayout> -->
+        <l:HorizontalLayout>
+            <Select
+                forceSelection="true"
+                selectedKey="{/selectedKey}"
+                items="{/selectValues}"
+                change="onTimeChange">
+                <core:Item key="{key}" text="{name}"/>
+            </Select>
+            <Button icon="sap-icon://appointment-2" press="onOpenCalendar" class="sapUiSmallMarginBegin"/>
+        </l:HorizontalLayout>
+        <FlexBox justifyContent="SpaceBetween">
+            <items>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Visit Duration" class="sapUiSmallMargin cardTitle"/>
+                    <l:VerticalLayout width="100%" class="donutTxtContainer">
+                        <core:Fragment
+                            id="durationChart"
+                            binding="{/duration}"
+                            fragmentName="sap.sme.ilab.shopAna.view.chart.DonutChart" 
+                            type="XML"/>
+                        <Text text="{/totalVisit}" class="donutTxt" visible="{= !${/dataLoading}}"/>
+                    </l:VerticalLayout>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Visitor Volume" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="visitorVolumn"
+                        binding="{/number}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.ColumnChart" 
+                        type="XML"/>
+                    <core:Fragment
+                        id="numberDensityChart"
+                        binding="{/numberDensity}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.DensityChart" 
+                        type="XML"/>
+                    <core:Fragment
+                        id="numberLineChart"
+                        binding="{/number}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.LineChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Bounce Rate" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="bounceRateChart"
+                        binding="{/bounceRate}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.PieChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+            </items>
+        </FlexBox>
+        <l:VerticalLayout class="cardContainer sapUiSmallMarginTop" width="100%">
+            <Text text="Visitor Volume vs. Sales Revenue" class="sapUiSmallMargin cardTitle"/>
+            <viz:VizFrame
+                id="visitsRevenueBarChart"
+                width="100%"
+                vizType="dual_column"
+                visible="{= ${/selectedKey} === 'day' || ${/selectedKey} === 'week'}"
+                busyIndicatorDelay="0"
+                busy="{/dataLoading}">
+                <viz:dataset>
+                    <viz.data:FlattenedDataset data="{/visitsRevenue}">
+                        <viz.data:dimensions>
+                            <viz.data:DimensionDefinition name="Label" value="{label}"/>
+                        </viz.data:dimensions>
+                        <viz.data:measures>
+                            <viz.data:MeasureDefinition name="Visit" value="{visit}"/>
+                            <viz.data:MeasureDefinition name="Revenue" value="{revenue}"/>
+                        </viz.data:measures>
+                    </viz.data:FlattenedDataset>
+                </viz:dataset>
+                <viz:feeds>
+                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Visit"/>
+                    <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Revenue"/>
+                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Label"/>
+                </viz:feeds>
+            </viz:VizFrame>
+            <viz:VizFrame
+                id="visitsRevenueLineChart"
+                width="100%"
+                vizType="dual_line"
+                visible="{= ${/selectedKey} === 'month' || ${/selectedKey} === 'calendar'}"
+                busyIndicatorDelay="0"
+                busy="{/dataLoading}">
+                <viz:dataset>
+                    <viz.data:FlattenedDataset data="{/visitsRevenue}">
+                        <viz.data:dimensions>
+                            <viz.data:DimensionDefinition name="Label" value="{label}"/>
+                        </viz.data:dimensions>
+                        <viz.data:measures>
+                            <viz.data:MeasureDefinition name="Visit" value="{visit}"/>
+                            <viz.data:MeasureDefinition name="Revenue" value="{revenue}"/>
+                        </viz.data:measures>
+                    </viz.data:FlattenedDataset>
+                </viz:dataset>
+                <viz:feeds>
+                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Visit"/>
+                    <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Revenue"/>
+                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Label"/>
+                </viz:feeds>
+            </viz:VizFrame>
+        </l:VerticalLayout>
+	</ScrollContainer>
+</mvc:View>

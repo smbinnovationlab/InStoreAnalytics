@@ -1,0 +1,57 @@
+<mvc:View
+	controllerName="sap.sme.ilab.shopAna.controller.App"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	class="appContainer"
+	height="100%"
+	xmlns:l="sap.ui.layout">
+	<l:HorizontalLayout id="mask" class="mask" visible="false"></l:HorizontalLayout>
+	<!-- <mvc:XMLView 
+		viewName="sap.sme.ilab.shopAna.view.Notification" 
+		class="notificationCenter" 
+		visible="{/notificationVisible}"
+		/> -->
+	<!-- <Page title="Shop Analytics" enableScrolling="true">
+		<headerContent>
+			<Button 
+				icon="sap-icon://bell" 
+				tooltip="Notifications"
+				press="onNotificationPress"/>
+		</headerContent>
+		<content> -->
+			<!-- <Title 
+				text="In-Store Analytics" 
+				width="100%" 
+				textAlign="Center"
+				class="sapUiSmallMarginTop"/> -->
+			<IconTabBar
+				id="myTabBar"
+				expandable="false"
+				expanded="{device>/isNoPhone}"
+				class="sapUiResponsiveContentPadding customBg"
+				select="onTabSelect"
+				stretchContentHeight="true">
+				<items>
+					<IconTabFilter
+						text="Visits">
+						<mvc:XMLView viewName="sap.sme.ilab.shopAna.view.Visits" displayBlock="true"/>
+					</IconTabFilter>
+					<IconTabFilter
+						text="Persona">
+						<mvc:XMLView viewName="sap.sme.ilab.shopAna.view.Persona"/>
+					</IconTabFilter>
+					<IconTabFilter
+						text="People">
+						<mvc:XMLView viewName="sap.sme.ilab.shopAna.view.People"/>
+					</IconTabFilter>
+					<!-- <IconTabFilter
+						text="Flow"
+						enabled="false">
+						<Text text="Flow goes here ..." />
+					</IconTabFilter> -->
+				</items>
+			</IconTabBar>
+			<Image src="{imageModel>/path}/img/SMB_Innovation_Lab.png" class="logo"/>
+		<!-- </content>
+	</Page> -->
+</mvc:View>

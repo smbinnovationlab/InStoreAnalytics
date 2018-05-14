@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    <ResponsivePopover
+        class="sapUiPopupWithPadding"
+        placement="PreferredBottomOrFlip"
+        showHeader="false">
+        <content>
+            <l:VerticalLayout>
+                <l:HorizontalLayout>
+                    <Image src="{/src}" width="6rem" class="avatar"/>
+                    <l:VerticalLayout class="sapUiSmallMargin">
+                        <l:HorizontalLayout>
+                            <Text text="{/name}"/>
+                            <Text text="VIP" class="sapUiSmallMarginBegin vipTag" visible="{= ${/vip}}"/>
+                        </l:HorizontalLayout>
+                        <Text text="${/spend} total spend"/>
+                        <Text text="${/balance} credit"/>
+                        <Text text="{/visitCountIn90} visits in last three month"/>
+                    </l:VerticalLayout>
+                </l:HorizontalLayout>
+                <Text text="Recently bought:"/>
+                    <FlexBox alignItems="Stretch" items="{/bought}">
+                        <items>
+                            <core:Fragment
+                                binging="{/}"
+                                fragmentName="sap.sme.ilab.shopAna.view.ProductCard" 
+                                type="XML"/>
+                        </items>
+                    </FlexBox>
+                <Text text="Recommendations:" class="sapUiSmallMarginTop"/>
+                    <FlexBox alignItems="Stretch" items="{/recommends}">
+                        <items>
+                            <core:Fragment
+                                fragmentName="sap.sme.ilab.shopAna.view.ProductCard" 
+                                type="XML"/>
+                        </items>
+                    </FlexBox>
+            </l:VerticalLayout>
+        </content>
+    </ResponsivePopover>
+</core:FragmentDefinition>

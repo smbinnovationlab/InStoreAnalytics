@@ -1,0 +1,27 @@
+<FragmentDefinition
+    xmlns="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds">
+    <viz:VizFrame 
+        id="lineChart"
+        width="100%"
+        vizType="line"
+        busyIndicatorDelay="0">
+        <viz:dataset>
+            <viz.data:FlattenedDataset data="{}">
+                <viz.data:dimensions>
+                    <viz.data:DimensionDefinition name="Label" value="{label}"/>
+                </viz.data:dimensions>
+                <viz.data:measures>
+                    <viz.data:MeasureDefinition name="Value" value="{value}"/>
+                </viz.data:measures>
+            </viz.data:FlattenedDataset>
+        </viz:dataset>
+        <viz:feeds>
+            <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Value"/>
+            <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Label"/>
+        </viz:feeds>
+    </viz:VizFrame>
+</FragmentDefinition>

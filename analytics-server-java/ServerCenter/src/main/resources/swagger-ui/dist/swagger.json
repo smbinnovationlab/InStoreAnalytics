@@ -1,0 +1,118 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a sample spec for our REST API. Generated at 2017-08-27T03:43:17Z",
+    "version" : "0.0.1-SNAPSHOT",
+    "title" : "Swagger REST API",
+    "termsOfService" : "https://github.com/VIIgit/swagger-spring-jaxrs-sample-app",
+    "contact" : {
+      "name" : "Erwin",
+      "url" : "https://github.com/VIIgit/",
+      "email" : "github(@)vii.ch"
+    },
+    "license" : {
+      "name" : "Apache Licence 2.0",
+      "url" : "https://raw.githubusercontent.com/VIIgit/swagger-spring-jaxrs-sample-app/master/LICENSE"
+    }
+  },
+  "host" : "localhost:[port]",
+  "basePath" : "/app",
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/rest/contacts" : {
+      "post" : {
+        "summary" : "Get List of Users",
+        "description" : "List can be filtered by Name",
+        "operationId" : "getContactInfo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ContactInfoModel"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/users" : {
+      "get" : {
+        "summary" : "Get List of Users",
+        "description" : "List can be filtered by Name",
+        "operationId" : "getUsers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "query",
+          "description" : "Filters the list by name beginning with.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Person"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ContactInfoModel" : {
+      "type" : "object",
+      "required" : [ "emailType" ],
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "emailType" : {
+          "type" : "string",
+          "description" : "Ability to diffentiate email addresses",
+          "enum" : [ "PRIVATE", "BUSINESS", "UNKNOWN" ]
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Person's relationship status (API: list of not type safe enumenration as strings with 'allowableValues' )",
+          "enum" : [ "single", "married", "divorced" ]
+        },
+        "entityLifeCycle" : {
+          "type" : "string",
+          "description" : "Entity's LifeCyle Status ",
+          "enum" : [ "DRAFT", "ACTIVE", "DELETED" ]
+        }
+      },
+      "description" : "Person with an email address"
+    },
+    "Person" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Person's relationship status (API: list of not type safe enumenration as strings with 'allowableValues' )",
+          "enum" : [ "single", "married", "divorced" ]
+        },
+        "entityLifeCycle" : {
+          "type" : "string",
+          "description" : "Entity's LifeCyle Status ",
+          "enum" : [ "DRAFT", "ACTIVE", "DELETED" ]
+        }
+      }
+    }
+  }
+}

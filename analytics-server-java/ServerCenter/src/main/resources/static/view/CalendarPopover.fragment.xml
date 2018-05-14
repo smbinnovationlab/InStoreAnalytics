@@ -1,0 +1,19 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:u="sap.ui.unified">
+    <ResponsivePopover 
+        placement="PreferredRightOrFlip"
+        showHeader="false">
+        <content>
+            <u:Calendar 
+                id="datePickerCalendar" 
+                intervalSelection="true"
+                showWeekNumbers="false"
+                select="handleCalendarSelect"
+                minDate="{/minDate}"
+                maxDate="{/maxDate}"/>
+        </content>
+    </ResponsivePopover>
+</core:FragmentDefinition>

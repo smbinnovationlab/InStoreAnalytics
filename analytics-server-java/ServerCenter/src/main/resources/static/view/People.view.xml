@@ -1,0 +1,72 @@
+<mvc:View
+    controllerName="sap.sme.ilab.shopAna.controller.People"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    displayBlock="true"
+    height="100%">
+    <ScrollContainer
+		height="100%"
+		width="100%"
+		horizontal="false"
+		vertical="true">
+        <FlexBox justifyContent="SpaceBetween" height="100%" displayInline="true">
+            <items>
+                <l:VerticalLayout class="peopleVideoContainer">
+                    <Image 
+                        src="{/videoData}"
+                        width="95%"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="peopleInfoPane">
+                    <Toolbar>
+                        <Text text="Recent visitors ({/peopleCount})"/>
+                        <ToolbarSpacer/>
+                        <Select
+                            forceSelection="true"
+                            selectedKey="{/selectedKey}"
+                            items="{
+                                path: '/selectValues',
+                                sorter: { path: 'name' }
+                            }">
+                            <core:Item key="{key}" text="{name}" />
+                        </Select>
+                    </Toolbar>
+                    <FlexBox
+                        class="avatarContainer"
+                        wrap="Wrap"
+                        items="{/customers}">
+                        <items>
+                            <l:HorizontalLayout>
+                                <Image 
+                                    src="{src}"
+                                    class="avatar"
+                                    press="onShowPeopleDialog"/>
+                                <Image 
+                                    src="{imageModel>/path}/img/vip_new.png" 
+                                    visible="{= ${type} === 'vip'}"
+                                    class="absoluteRightTop tag"/>
+                                <Image 
+                                    src="{imageModel>/path}/img/repeat.png" 
+                                    visible="{countTextVisible}"
+                                    class="absoluteRightTop tag"/>
+                                <!-- <Text text="VIP" class="vipTag absoluteRightTop" visible="{= ${type} === 'vip'}"/>
+                                <Text text="3+" class="countTag absoluteRightTop" visible="{countTextVisible}"/> -->
+                            </l:HorizontalLayout>
+                        </items>
+                    </FlexBox>
+                    <l:VerticalLayout 
+                        id="peopleDialog"
+                        class="peopleDialog" 
+                        binding="{/selectedPeople}" 
+                        visible="false">
+                        <core:Fragment
+                            fragmentName="sap.sme.ilab.shopAna.view.PeopleDialog" 
+                            type="XML"/>
+                    </l:VerticalLayout>
+                </l:VerticalLayout>
+            </items>
+        </FlexBox>
+    </ScrollContainer>
+</mvc:View>

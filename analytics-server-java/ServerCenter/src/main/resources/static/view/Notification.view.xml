@@ -1,0 +1,26 @@
+<mvc:View
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<l:VerticalLayout
+		class="sapUiContentPadding"
+		width="100%">
+		<l:content>
+			<List 
+				id="notificationList" 
+				class="sapContrast sapContrastPlus"
+				items="{/notifications}">
+				<items>
+					<NotificationListItem
+						title="{title}"
+						description="{description}"
+						showCloseButton="false"
+						datetime="{datetime}"
+						unread="{unread}"
+						priority="{priority}">
+					</NotificationListItem>
+				</items>
+			</List>
+		</l:content>
+	</l:VerticalLayout>
+</mvc:View>

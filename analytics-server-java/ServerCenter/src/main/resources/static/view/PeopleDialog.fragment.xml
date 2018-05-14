@@ -1,0 +1,94 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    <l:VerticalLayout class="peopleDialog-block">
+        <FlexBox alignItems="Center" class="peopleInfoBox">
+            <Image src="{src}" width="10rem" height="auto" class="avatar"/>
+            <l:VerticalLayout width="90%">
+                <l:VerticalLayout
+                    class="sapUiSmallMargin peopleDialog-infoBlock">
+                    <l:HorizontalLayout width="100%" class="peopleDialog-nameBlock">
+                        <Text text="{name}" class="peopleDialog-name"/>
+                        <!-- <Image 
+                            src="{imageModel>/path}/img/vip_new.png" 
+                            height="1rem" 
+                            visible="{= ${type} === 'vip'}"/>
+                        <Image 
+                            src="{imageModel>/path}/img/repeat.png" 
+                            height="1rem" 
+                            visible="{countTextVisible}"/> -->
+                    </l:HorizontalLayout>
+                    <List 
+                        items="{info}" 
+                        showSeparators="None">
+                        <CustomListItem class="peopleDialog-infoLine">
+                            <Text text="{label}:" width="50%" textAlign="End" class="peopleDialog-highlight"/>
+                            <Text text="{value}" class="sapUiSmallMarginBegin peopleDialog-light"/>
+                            <!-- <Image 
+                                src="{icon}" 
+                                width="1rem"/> -->
+                        </CustomListItem>
+                    </List>
+                    
+                </l:VerticalLayout>
+                <l:VerticalLayout 
+                    class="absoluteRightTop rightCornerContainer vipRightCornerColor" 
+                    visible="{= ${type} === 'vip'}">
+                    <Image 
+                        src="{imageModel>/path}/img/vip_new_1.png" 
+                        height="2rem"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout 
+                    class="absoluteRightTop rightCornerContainer repeatRightCornerColor" 
+                    visible="{countTextVisible}">
+                    <Image 
+                        src="{imageModel>/path}/img/repeat_1.png" 
+                        height="2rem"/>
+                </l:VerticalLayout>
+            </l:VerticalLayout>
+        </FlexBox>
+        <l:HorizontalLayout visible="{= ${visitCount} > 0}">
+            <Text text="Previous visits: {visitCount}" />
+            <Image 
+                src="{imageModel>/path}/img/list.png" 
+                width="1rem" 
+                class="sapUiSmallMarginBegin"/>
+        </l:HorizontalLayout>
+        <List 
+            items="{previousVisits}"
+            showSeparators="None"
+            showNoData="false">
+            <CustomListItem>
+                <l:HorizontalLayout class="peopleDialog-visit-col1">
+                    <Text text="{time}" class="peopleDialog-visit-smallText peopleDialog-light"/>
+                    <Text text="{mood}" class="peopleDialog-visit-smallText peopleDialog-visit-smallMargin"/>
+                    <Text text="{moodCount}" class="peopleDialog-visit-smallText peopleDialog-highlight peopleDialog-visit-smallMargin"/>
+                </l:HorizontalLayout>
+                <!-- <Text 
+                    text="{order}" 
+                    width="30%" 
+                    textAlign="End" 
+                    class="peopleDialog-visit-smallText underline"
+                    visible="{= ${order} !== null}"/> -->
+            </CustomListItem>
+        </List>
+    </l:VerticalLayout>
+    <l:VerticalLayout class="peopleDialog-block sapUiSmallMarginTop">
+        <Text text="Wine Recommendations:" class="peopleDialog-productCard-smallMarginTop"/>
+        <List 
+            items="{recommends}" 
+            showSeparators="None" 
+            width="100%"
+            class="sapUiSmallMarginTop">
+            <CustomListItem>
+                <core:Fragment
+                    fragmentName="sap.sme.ilab.shopAna.view.ProductCard" 
+                    type="XML"/>
+            </CustomListItem>
+        </List>
+        <FlexBox justifyContent="SpaceAround">
+            <Button text="Close" press="onHidePeopleDialog" class="peopleDialog-closeBtn"/>
+        </FlexBox>
+    </l:VerticalLayout>
+</core:FragmentDefinition>

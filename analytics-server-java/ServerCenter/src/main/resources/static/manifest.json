@@ -1,0 +1,45 @@
+{
+    "_version" : "1.1.0",
+    "sap.app" : {
+        "_version" : "1.1.0",
+        "id" : "sap.sme.ilab.shopAna",
+        "type" : "application",
+        "title" : "Digital Retail: In-Store Analytics",
+        "description" : "",
+        "applicationVersion" : {
+            "version" : "1.1.0"
+        }
+    },
+    "sap.ui" : {
+        "_version" : "1.1.0",
+        "technology" : "UI5",
+        "deviceTypes" : {
+            "desktop" : true,
+            "tablet" : true,
+            "phone" : true
+        },
+        "supportedThemes" : [
+            "sap_belize"
+        ]
+    },
+    "sap.ui5" : {
+        "config": {
+            "fullWidth": true
+        },
+        "_version" : "1.1.0",
+        "rootView" : "sap.sme.ilab.shopAna.view.App",
+        "dependencies" : {
+            "minUI5Version" : "1.30",
+            "libs" : {
+                "sap.m" : {}
+            }
+        },
+        "resources" : {
+            "css" : [
+                {
+                    "uri" : "css/main.css"
+                }
+            ]
+        }
+    }
+}

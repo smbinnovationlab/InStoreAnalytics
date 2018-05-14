@@ -1,0 +1,38 @@
+name: facerec
+channels:
+- defaults
+dependencies:
+- certifi=2017.11.5=py36hb8ac631_0
+- pip=9.0.1=py36h226ae91_4
+- python=3.6.3=h3b118a2_4
+- setuptools=36.5.0=py36h65f9e6e_0
+- vc=14=h2379b0c_2
+- vs2015_runtime=14.0.25123=hd4c4e62_2
+- wheel=0.30.0=py36h6c3ec14_1
+- wincertstore=0.2=py36h7fe50ca_0
+- pip:
+  - backports.weakref==1.0rc1
+  - bleach==1.5.0
+  - chardet==3.0.4
+  - graphviz==0.8.2
+  - h5py==2.7.1
+  - html5lib==0.9999999
+  - idna==2.6
+  - keras==2.1.2
+  - markdown==2.6.11
+  - numpy==1.14.0
+  - objgraph==3.4.0
+  - opencv-python==3.4.0.12
+  - protobuf==3.5.1
+  - pylru==1.0.9
+  - pyyaml==3.12
+  - requests==2.18.4
+  - scipy==1.0.0
+  - six==1.11.0
+  - sqlalchemy==1.2.0
+  - tensorflow==1.2.1
+  - tornado==4.5.3
+  - urllib3==1.22
+  - werkzeug==0.14.1
+prefix: facerec
+

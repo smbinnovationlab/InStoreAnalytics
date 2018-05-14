@@ -1,0 +1,175 @@
+<mvc:View
+    controllerName="sap.sme.ilab.shopAna.controller.Persona"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    displayBlock="true"
+    height="100%">
+    <ScrollContainer
+		height="100%"
+		width="100%"
+		horizontal="false"
+		vertical="true">
+        <l:HorizontalLayout>
+            <Select 
+                forceSelection="true"
+                selectedKey="{/selectedKey}"
+                items="{/selectValues}"
+                change="onTimeChange">
+                <core:Item key="{key}" text="{name}"/>
+            </Select>
+            <Button icon="sap-icon://appointment-2" press="onOpenCalendar" class="sapUiSmallMarginBegin"/>
+        </l:HorizontalLayout>
+        <FlexBox justifyContent="SpaceBetween" wrap="Wrap">
+            <items>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Returning vs. New" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="returnRateChart"
+                        binding="{/returnVsNew}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.PieChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Return Frequency" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="returnFrequencyColumn"
+                        binding="{/returnFrequency}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.ColumnChart" 
+                        type="XML"/>
+                    <core:Fragment
+                        id="returnFrequencyLine"
+                        binding="{/returnFrequency}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.LineChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol3 cardContainer">
+                    <Text text="Visitor Type" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="conversionChart"
+                        binding="{/conversionData}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.BarChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol4 cardContainer sapUiSmallMarginTop">
+                    <Text text="Gender" class="sapUiSmallMargin cardTitle"/>
+                    <l:VerticalLayout busy="{/dataLoading}" busyIndicatorDelay="0" width="100%">
+                        <FlexBox 
+                            alignItems="Center" 
+                            justifyContent="Center">
+                            <FlexBox direction="Column">
+                                <Text text="Female" class="genderCard-genderTitle genderCard-femaleColor"/>
+                                <Text text="{/femalePercent}" class="genderCard-genderPercent genderCard-femaleColor"/>
+                            </FlexBox>
+                            <Image src="{imageModel>/path}/img/ic_malefemale.png" width="5rem" class="genderIcon"/>
+                            <FlexBox direction="Column">
+                                <Text text="Male" class="genderCard-genderTitle genderCard-maleColor"/>
+                                <Text text="{/malePercent}" class="genderCard-genderPercent genderCard-maleColor"/>
+                            </FlexBox>
+                        </FlexBox>
+                        <viz:VizFrame 
+                            id="genderChart"
+                            vizType="dual_horizontal_combination"
+                            width="100%"
+                            height="15rem">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{/genderData}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Label" value="{age}"/>
+                                        <viz.data:DimensionDefinition name="Gender" value="{gender}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <!-- <viz.data:MeasureDefinition name="Male" value="{maleNumber}"/>
+                                        <viz.data:MeasureDefinition name="Female" value="{femaleNumber}"/> -->
+                                        <viz.data:MeasureDefinition name="Number" value="{number}"/>
+                                        <viz.data:MeasureDefinition name="Base" value="{base}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <!-- <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Female" />
+                                <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Male" /> -->
+                                <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Number" />
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Base" />
+                                <viz.feeds:FeedItem uid="color" type="Dimension" values="Gender" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Label" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </l:VerticalLayout>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol4 cardContainer sapUiSmallMarginTop">
+                    <Text text="Demographics" class="sapUiSmallMargin cardTitle"/>
+                    <core:Fragment
+                        id="demographicsChart"
+                        binding="{/demographicsData}"
+                        fragmentName="sap.sme.ilab.shopAna.view.chart.LineChart" 
+                        type="XML"/>
+                </l:VerticalLayout>
+                <l:VerticalLayout class="myCol2 cardContainer sapUiSmallMarginTop">
+                    <Text text="Sentiment" class="sapUiSmallMargin cardTitle"/>
+                    <l:DynamicSideContent 
+                        equalSplit="true" 
+                        busyIndicatorDelay="0"
+                        busy="{/dataLoading}">
+                        <l:mainContent>
+                            <viz:VizFrame
+                                id="sentimentChart"
+                                width="100%" 
+                                vizType="bubble">
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset data="{/sentimentData}">
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition name="Label" value="{label}"/>
+                                        </viz.data:dimensions>
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition name="Value1" value="{value1}"/>
+                                            <viz.data:MeasureDefinition name="Value2" value="{value2}"/>
+                                            <viz.data:MeasureDefinition name="Value3" value="{value3}"/>
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Value1"/>
+                                    <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Value2"/>
+                                    <viz.feeds:FeedItem uid="bubbleWidth" type="Measure" values="Value3"/>
+                                    <viz.feeds:FeedItem uid="color" type="Dimension" values="Label"/>
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </l:mainContent>
+                        <l:sideContent>
+                            <viz:VizFrame
+                                id="sentimentTrendLineChart"
+                                width="100%"
+                                vizType="line">
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset data="{/sentimentTrendData}">
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition name="Label" value="{time}"/>
+                                        </viz.data:dimensions>
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition name="Angry" value="{Angry}"/>
+                                            <viz.data:MeasureDefinition name="Happy" value="{Happy}"/>
+                                            <viz.data:MeasureDefinition name="Neutral" value="{Neutral}"/>
+                                            <viz.data:MeasureDefinition name="Frown" value="{Frown}"/>
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Frown"/>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Angry"/>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Happy"/>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Neutral"/>
+                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Label"/>
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </l:sideContent>
+                    </l:DynamicSideContent>
+                </l:VerticalLayout>
+            </items>
+        </FlexBox>
+    </ScrollContainer>
+</mvc:View>

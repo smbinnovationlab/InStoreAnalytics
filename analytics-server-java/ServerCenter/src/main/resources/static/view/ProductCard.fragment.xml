@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    <FlexBox class="cardContainer peopleDialog-productCard" alignItems="Center">
+        <Image src="{imageModel>/path}/img/product_images/{id}.jpg" width="6rem" class="sapUiSmallMarginBegin"></Image>
+        <l:VerticalLayout class="sapUiSmallMarginBegin">
+            <!-- <FlexBox justifyContent="SpaceBetween" class="peopleDialog-productCard-smallMarginTop">
+                <Text text="{name}"/>
+                <Image 
+                    src="{imageModel>/path}/img/openwith.png" 
+                    width="1rem"
+                    press="onClickOpenImg"/>
+            </FlexBox> -->
+            <Link text="{name}" class="peopleDialog-productCard-smallMarginTop" press="onClickOpenImg" wrapping="true"/>
+            <Text text="{color}: {location}" class="peopleDialog-productCard-smallMarginTop peopleDialog-light"/>
+            <Text text="{notes}" class="peopleDialog-light"/>
+            <FlexBox alignItems="Center" class="peopleDialog-productCard-smallMarginTop productPriceContainer">
+                <Image src="{imageModel>/path}/img/price.png" width="1.5rem"/>
+                <Text text="${price}" class="peopleDialog-highlight peopleDialog-productCard-price peopleDialog-visit-smallMargin"/>
+                <Text 
+                    text="(" 
+                    class="peopleDialog-highlight peopleDialog-productCard-price peopleDialog-visit-smallMargin"
+                    visible="{= ${oldPrice} !== null}"/>
+                <Text 
+                    text="${oldPrice}" 
+                    class="peopleDialog-highlight peopleDialog-productCard-oldPrice"
+                    visible="{= ${oldPrice} !== null}"/>
+                <Text 
+                    text=")" 
+                    class="peopleDialog-highlight peopleDialog-productCard-price"
+                    visible="{= ${oldPrice} !== null}"/>
+            </FlexBox>
+        </l:VerticalLayout>
+    </FlexBox>
+</core:FragmentDefinition>

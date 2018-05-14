@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8">
+        <title>In-Store Analytics</title>
+        <script 
+            id="sap-ui-bootstrap"
+            src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+            tt="./library/sapui5-dist-1.54.0-download/resources/sap-ui-core.js"
+            data-sap-ui-theme="sap_belize"
+            data-sap-ui-libs="sap.m"
+            data-sap-ui-compatVersion="edge"
+            data-sap-ui-preload="async"
+            data-sap-ui-resourceroots='{
+                "sap.sme.ilab.shopAna" : "./"
+            }'
+            >
+        </script>
+        <script>
+            sap.ui.getCore().attachInit(function() {
+                new sap.ui.core.ComponentContainer({
+                    name: "sap.sme.ilab.shopAna"
+                }).placeAt("content")
+            });
+        </script>
+    </head>
+    <body id="content" class="sapUiBody">
+    </body>
+</html>
+
