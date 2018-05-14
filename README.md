@@ -41,14 +41,14 @@ You have enabled the followings on your computer:
 * [SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=1695/)
 
 ### Procedure
-1. Download the release [build](http://note.youdao.com/)
-2. Extract file “build.zip”
+1. Download the release [build](https://github.com/smbinnovationlab/InStoreAnalytics/releases/download/V0.1/InStoreAnalytcis-builds.zip)
+2. Extract the zip file “InStoreAnalytcis-builds.zip”
 3. In SQL Server, create a database
     1. Name the database "**ShopAnalytics**"
     2. Execute "DB/**DBCreate.sql**"
 
 ### Running In-Store Analytics
-1. Navigate to folder ...In-Store Analytics\
+1. Navigate to unzip folder
 2. Run "InitData.bat"
 3. Run "CameraServer.exe" 
 4. Run "AnalyticsServer.bat", and enter the account name and password of the created database
@@ -80,7 +80,7 @@ You have enabled the followings on your computer:
         ```console
             conda env create -f environment.yml -n face
         ```
-    4. Download the face recognization models from here, and extract to "camera-server-python\face_process\models"
+    4. Download the face recognization models from [here](https://drive.google.com/open?id=1NRhwIGPhyhR9uqQb8EmZigEwOoirTO_8), and extract to "camera-server-python\face_process\models"
 4. Install the analytics server, using java
     1. Change the directory to the "analytics-server-java" folder
     2. In file "application.properties", fill the connection strings of the database  
