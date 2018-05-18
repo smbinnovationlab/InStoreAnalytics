@@ -101,6 +101,10 @@ You have enabled the followings on your computer:
     ```
 4. In any browser, go to http://IP:8080/client/index.html
 
+## Tips
+- In-Store Analytics is a loosely coupled solution. Currently we provide the mock up data, but you can integrate this solution with your ERP system (e.g. SAP Business One, SAP ByDesign etc.)
+- If you want to deploy the analytics server (pure java application) in SAP Cloud Platform. You could follow this [link](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/e5dfbc6cbb5710149279f67fb43d4e5d.html)
+
 ## License
 In-Store Analytics is released under the terms of the MIT license. For more information, see LICENSE or visit https://opensource.org/licenses/MIT.
 
