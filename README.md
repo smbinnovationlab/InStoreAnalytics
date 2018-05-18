@@ -38,7 +38,7 @@ You can install In-Store Analytics in either of the following ways:
 You have enabled the followings on your computer:
 
 * Java runtime environment
-* [SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=1695/)
+* [SQL Server](https://www.microsoft.com/en-in/download/details.aspx?id=30438/)
 
 ### Procedure
 1. Download the release [build](https://github.com/smbinnovationlab/InStoreAnalytics/releases/download/V0.1/InStoreAnalytcis-builds.zip)
@@ -62,7 +62,7 @@ In-Store Analytics contains three parts: the database, the camera server, and th
 ### Prerequisit
 You have enabled the followings on your computer:
 
-  * [SQL Server](https://www.microsoft.com/en-us/download/details.aspx?id=1695/)
+  * [SQL Server](https://www.microsoft.com/en-in/download/details.aspx?id=30438/)
   * [Anaconda](https://www.anaconda.com/download/) 
   * JDK 1.8
   * [Gradle](https://gradle.org/install/#manually)
