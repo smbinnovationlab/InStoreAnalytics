@@ -41,7 +41,7 @@ You have enabled the followings on your computer:
 * [SQL Server](https://www.microsoft.com/en-in/download/details.aspx?id=30438/)
 
 ### Procedure
-1. Download the release [build](https://github.com/smbinnovationlab/InStoreAnalytics/releases/download/V0.1/InStoreAnalytcis-builds.zip)
+1. Download the release [build](https://github.com/smbinnovationlab/InStoreAnalytics/releases/download/V0.2/InStoreAnalytcis-builds.zip)
 2. Extract the zip file “InStoreAnalytcis-builds.zip”
 3. In SQL Server, create a database
     1. Name the database "**ShopAnalytics**"
