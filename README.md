@@ -117,8 +117,8 @@ You have enabled the followings on your computer:
     1. Uncomment the below sentence
     ```console
         remote.set_base_url(analytcsi_server_url)
-    syncb1 = AutoSyncB1(analytcsi_server_url,service_layer_url,service_layer_company,service_layer_username,service_layer_password,face_api,q)
-    syncb1.run()
+        syncb1 = AutoSyncB1(analytcsi_server_url,service_layer_url,service_layer_company,service_layer_username,service_layer_password,face_api,q)
+        syncb1.run()
     ```
     2. Fill the service_layer_url, service_layer_company, service_layer_username, service_layer_password and analytcsi_server_url
 5. Register a HCP account and login https://account.hanatrial.ondemand.com/cockpit
