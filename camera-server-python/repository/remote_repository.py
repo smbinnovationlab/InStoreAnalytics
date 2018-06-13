@@ -6,6 +6,11 @@ from tornado.httpclient import *
 
 #base_url = "https://servercenter0ad1619475.hana.ondemand.com/ServerCenter-0.0.1/app"
 base_url = "http://localhost:8080/app"
+
+def set_base_url(url):
+    global base_url
+    base_url= url;
+
 def error_handle(func):
     def wrapper(*args, **kwargs):
         try:

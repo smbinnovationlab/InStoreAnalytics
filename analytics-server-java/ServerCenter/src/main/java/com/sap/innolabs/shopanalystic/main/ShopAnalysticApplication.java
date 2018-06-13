@@ -2,18 +2,24 @@ package com.sap.innolabs.shopanalystic.main;
 
 import java.util.TimeZone;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.google.common.base.Predicates;
 
@@ -40,5 +46,17 @@ public class ShopAnalysticApplication extends SpringBootServletInitializer {
 		
         return application.sources(ShopAnalysticApplication.class);
     }
+	
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+	    return new CommonsMultipartResolver();
+	}
 
+	@Bean
+	public MultipartConfigElement multipartConfigElement() {
+	    MultipartConfigFactory factory = new MultipartConfigFactory();
+	    factory.setMaxFileSize("500MB");
+	    factory.setMaxRequestSize("500MB");
+	    return factory.createMultipartConfig();
+	}
 }

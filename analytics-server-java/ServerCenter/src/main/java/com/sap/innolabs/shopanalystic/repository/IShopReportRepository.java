@@ -15,6 +15,7 @@ import com.sap.innolabs.shopanalystic.model.ConversionPipline;
 import com.sap.innolabs.shopanalystic.model.CustomerInfor;
 import com.sap.innolabs.shopanalystic.model.CustomerSummaryInfor;
 import com.sap.innolabs.shopanalystic.model.GeneralVistInfor;
+import com.sap.innolabs.shopanalystic.model.ProductInfor;
 import com.sap.innolabs.shopanalystic.model.ReturnFrequency;
 import com.sap.innolabs.shopanalystic.model.ReturnRate;
 import com.sap.innolabs.shopanalystic.model.RevenueInfor;
@@ -59,4 +60,10 @@ public interface IShopReportRepository {
 	public List<Sentiment> GetSentimentByDate(String date) ;
 	public List<Sentiment> GetSentimentByWeek(String begin, String end) ;
 
+	public List<ProductInfor> GetRamdomRecommand(int size);
+	
+	public List<ProductInfor> GetAllProducts();
+	public void AddProduct(ProductInfor info);
+	
+	public List<CustomerInfor> GetAllCustomerInfors();
 }

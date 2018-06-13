@@ -5,6 +5,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,8 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig(@Context ServletContext servletContext) {
         //register(ShopReportImp.class);
     	 register(CORSResponseFilter.class);
+    	 register(MultiPartFeature.class);
+
     	 register(com.sap.innolabs.shopanalystic.imp.CameraImp.class);
     	 register(com.sap.innolabs.shopanalystic.imp.ShopReportImp.class);
         //this.packages("com.sap.innolabs.shopanalystic.imp");

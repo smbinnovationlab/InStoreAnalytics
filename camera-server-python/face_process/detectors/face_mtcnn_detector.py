@@ -276,9 +276,9 @@ class FaceMTCNNDetector(object):
 
     detect_weight_model_dir = os.path.dirname(os.path.realpath(__file__))+ '/../models/'
     gpu_memory_fraction = 0.4
-    minsize = 80  # minimum size of face
-    #threshold = [0.6, 0.7, 0.7]  # three steps's threshold
-    threshold = [0.99, 0.99, 0.99]  # three steps's threshold
+    minsize = 20  # minimum size of face
+    threshold = [0.6, 0.7, 0.7]  # three steps's threshold
+    #threshold = [0.99, 0.99, 0.99]  # three steps's threshold
     factor = 0.709  # scale factor
 
     def __init__(self):

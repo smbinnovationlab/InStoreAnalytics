@@ -168,6 +168,9 @@ public class ShopReportRepository_MSSQL extends BaseShopReportRepository {
 		query.registerStoredProcedureParameter("UntilCurrentTime", Integer.class, ParameterMode.IN);
 		query.setParameter("UntilCurrentTime", 0);
 		query.execute();
+		
+		query = this.entityManager.createStoredProcedureQuery("GenerateMockProductionInfor");
+		query.execute();
 	}
 	
 	

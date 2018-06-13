@@ -114,7 +114,7 @@ class FrontDoorMonitor(Thread):
 
 
             if len(rec_face_images) > 0:
-                self._queue.put((rec_face_images,record_focus,self._is_manual_mode,self._force_capture_user_id))
+                self._queue.put((0,rec_face_images,record_focus,self._is_manual_mode,self._force_capture_user_id))
 
 
             SocketServer.send(frame)

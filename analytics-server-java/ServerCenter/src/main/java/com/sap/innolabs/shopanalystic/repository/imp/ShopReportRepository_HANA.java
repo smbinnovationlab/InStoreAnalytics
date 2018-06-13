@@ -44,8 +44,8 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 
 		String sqlstr = "" + "SELECT " + "	 COUNT(*) AS \"totalNumber\", "
 				+ "	 'Day ' || CAST(MAX(\"EnterTime\") AS varchar) AS \"readLastTime\", "
-				+ "	 CAST(FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"malePercentage\", "
-				+ "	 CAST(100 - FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"femalePercentage\", "
+				+ "	 CAST(FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"femalePercentage\", "
+				+ "	 CAST(100 - FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"malePercentage\", "
 				+ "	 IFNULL(SUM(CASE WHEN \"during\" = 0 " + "		THEN 1 " + "		ELSE 0 " + "		END), "
 				+ "	 0) AS \"duration1Min\", " + "	 IFNULL(SUM(CASE WHEN \"during\" > 0 "
 				+ "		AND \"during\" <= 5 " + "		THEN 1 " + "		ELSE 0 " + "		END), "
@@ -97,9 +97,9 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 
 	public List<AgeRangeInfor> GetAgeInforByDate(String date) {
 		String sqlstr = ""
-				+ "SELECT (\"Age\" / 10) * 10 AS \"age\", SUM(\"Gender\") AS \"maleNumber\", SUM(ABS(\"Gender\" - 1)) "
+				+ "SELECT CAST((\"Age\"/ 10) AS INT) * 10 AS \"age\", SUM(\"Gender\") AS \"maleNumber\", SUM(ABS(\"Gender\" - 1)) "
 				+ "AS \"femaleNumber\" FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) AND DAYS_BETWEEN(\"EnterTime\", "
-				+ " ?1) = 0 GROUP BY \"Age\" / 10 ORDER BY \"Age\" / 10;";
+				+ " ?1) = 0 GROUP BY CAST((\"Age\"/ 10) AS INT) * 10 ORDER BY \"age\";";
 		Query query = this.entityManager.createNativeQuery(sqlstr, AgeRangeInfor.class);
 		query.setHint(QueryHints.HINT_CACHEABLE, "false");
 		query.setParameter(1, date);
@@ -113,8 +113,8 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 		}
 		String sqlstr = ""
 				+ "SELECT COUNT(*) AS \"totalNumber\", 'Week ' || CAST(MAX(\"EnterTime\") AS varchar) AS \"readLastTime\", "
-				+ "CAST(FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"malePercentage\", "
-				+ "CAST(100 - FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"femalePercentage\", "
+				+ "CAST(FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"femalePercentage\", "
+				+ "CAST(100 - FLOOR(SUM(\"Gender\") * 100 / COUNT(*)) AS varchar(5)) || '%' AS \"malePercentage\", "
 				+ "IFNULL(SUM(CASE WHEN \"during\" = 0 THEN 1 ELSE 0 END), 0) AS \"duration1Min\", "
 				+ "IFNULL(SUM(CASE WHEN \"during\" > 0 AND \"during\" <= 5 THEN 1 ELSE 0 END), 0) AS \"duration5Min\", "
 				+ "CAST(FLOOR(IFNULL(SUM(CASE WHEN \"Emotion\" = 0 THEN 1 END), 0) * 100 / SUM(CASE WHEN \"Emotion\" IS NOT NULL THEN 1 END)) AS varchar(5)) AS \"happy\", "
@@ -157,9 +157,9 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 			return null;
 		}
 		String sqlstr = ""
-				+ "SELECT (\"Age\" / 10) * 10 AS \"age\", SUM(\"Gender\") AS \"maleNumber\", SUM(ABS(\"Gender\" - 1)) AS \"femaleNumber\" "
+				+ "SELECT CAST((\"Age\"/ 10) AS INT) * 10 AS \"age\", SUM(\"Gender\") AS \"maleNumber\", SUM(ABS(\"Gender\" - 1)) AS \"femaleNumber\" "
 				+ "FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) AND \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59' "
-				+ "GROUP BY \"Age\" / 10 ORDER BY \"Age\" / 10;";
+				+ "GROUP BY CAST((\"Age\"/ 10) AS INT) * 10 ORDER BY \"age\";";
 		Query query = this.entityManager.createNativeQuery(sqlstr, AgeRangeInfor.class);
 		query.setHint(QueryHints.HINT_CACHEABLE, "false");
 		query.setParameter(1, begin);
@@ -186,15 +186,18 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 		query.registerStoredProcedureParameter("UntilCurrentTime", Integer.class, ParameterMode.IN);
 		query.setParameter("UntilCurrentTime", 0);
 		query.execute();
+		
+		query = this.entityManager.createStoredProcedureQuery("GENERATEMOCKPRODUCTIONINFOR");
+		query.execute();
 	}
 	
 	//To be corrected.
 
 	public List<RevenueInfor> GetTimeRevenueByDate(String date) {
 		Query query = this.entityManager
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime, SUM(Case when Spent is null then 0 else Spent end) value from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0 \n" + 
-						"group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)) order by time\n" +
+				.createNativeQuery("select HOUR(\"EnterTime\") \"time\",CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) \"daytime\", SUM(Case when \"Spent\" is null then 0 else \"Spent\" end) \"value\" from \"VisitRecord\"\r\n" + 
+						"where HOUR(\"EnterTime\")>=9 and  \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) and DAYS_BETWEEN(\"EnterTime\",?1) = 0 \r\n" + 
+						"group by HOUR(\"EnterTime\"),CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) order by \"time\"" +
 						"", RevenueInfor.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
@@ -209,9 +212,9 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 			return null;
 		}
 		Query query = this.entityManager	
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime,SUM(Case when Spent is null then 0 else Spent end) value from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59' \n" + 
-						"group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)) order by daytime,time", RevenueInfor.class);
+				.createNativeQuery("select HOUR(\"EnterTime\") \"time\",CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) \"daytime\", SUM(Case when \"Spent\" is null then 0 else \"Spent\" end) \"value\" from \"VisitRecord\"\r\n" + 
+						"where HOUR(\"EnterTime\")>=9 and  \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) and \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59'  \r\n" + 
+						"group by HOUR(\"EnterTime\"),CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) order by \"time\"", RevenueInfor.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);
@@ -223,9 +226,9 @@ public class ShopReportRepository_HANA extends BaseShopReportRepository {
 public List<BounceRate> GetBounceRateByDate(String date) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery("select CAST( convert(date,EnterTime) AS varchar(20)) daytime,SUM(Case when Spent is null or Spent =0 then 1 else 0 end) bounce,COUNT(*) total from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0 \n" + 
-						"group by CAST( convert(date,EnterTime) AS varchar(20)) order by daytime", BounceRate.class);
+				.createNativeQuery("select CAST( CAST(\"EnterTime\" AS date) AS varchar(20))  \"daytime\",SUM(Case when \"Spent\" is null then 0 else \"Spent\" end) \"bounce\",COUNT(*) \"total\" from \"VisitRecord\"\r\n" + 
+						"where HOUR(\"EnterTime\")>=9 and  \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) and DAYS_BETWEEN(\"EnterTime\",?1) = 0 \r\n" + 
+						"group by CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) order by \"daytime\"", BounceRate.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, date);
@@ -236,9 +239,9 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<BounceRate> GetBounceRateByWeek(String begin,String end) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery("select CAST( convert(date,EnterTime) AS varchar(20)) daytime,SUM(Case when Spent is null or Spent =0 then 1 else 0 end) bounce,COUNT(*) total from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59' \n" + 
-						"group by CAST( convert(date,EnterTime) AS varchar(20)) order by daytime", BounceRate.class);
+				.createNativeQuery("select CAST( CAST(\"EnterTime\" AS date) AS varchar(20))  daytime,SUM(Case when \"Spent\" is null then 0 else \"Spent\" end) bounce,COUNT(*) total from \"VisitRecord\"\r\n" + 
+						"where HOUR(\"EnterTime\")>=9 and  \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' ) and  \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59' \r\n" + 
+						"group by CAST( CAST(\"EnterTime\" AS date) AS varchar(20)) order by \"daytime\"", BounceRate.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);
@@ -251,15 +254,12 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<ReturnRate> GetReturnRateByWeek(String begin,String end) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery("SELECT  SUM(CASE WHEN visitcount>0 THEN 1 ELSE 0 END) returnVisit,SUM(CASE WHEN visitcount>0 THEN 0 ELSE 1 END) newVisit \n" + 
-						"FROM(select SUM(CASE WHEN B.FaceID is null then 0 else 1 end) AS visitcount,A.FaceID from \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59' \n" + 
-						") A left join \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime < ?1 \n" + 
-						") B on A.FaceID = B.FaceID \n" + 
-						"GROUP BY A.FaceID ) T", ReturnRate.class);
+				.createNativeQuery("SELECT SUM(CASE WHEN \"visitcount\" > 0 THEN 1 ELSE 0 END) AS \"returnVisit\", SUM(CASE WHEN \"visitcount\" > 0 THEN 0 ELSE 1 END) AS \"newVisit\"\r\n" + 
+						" FROM (SELECT SUM(CASE WHEN B.\"FaceID\" IS NULL THEN 0 ELSE 1 END) AS \"visitcount\", A.\"FaceID\" \r\n" + 
+						" FROM (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND \"EnterTime\" > ?1 AND \"EnterTime\" < ?2  || ' 23:59:59')\r\n" + 
+						" AS A \r\n" + 
+						" LEFT OUTER JOIN (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < NOW() AND \"EnterTime\" < ?1) AS B \r\n" + 
+						" ON A.\"FaceID\" = B.\"FaceID\" GROUP BY A.\"FaceID\") AS T;", ReturnRate.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);
@@ -271,15 +271,12 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<ReturnRate> GetReturnRateByDate(String date) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery("SELECT  SUM(CASE WHEN visitcount>0 THEN 1 ELSE 0 END) returnVisit,SUM(CASE WHEN visitcount>0 THEN 0 ELSE 1 END) newVisit \n" + 
-						"FROM(select SUM(CASE WHEN B.FaceID is null then 0 else 1 end) AS visitcount,A.FaceID from \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0  \n" + 
-						") A left join \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime < ?1 \n" + 
-						") B on A.FaceID = B.FaceID \n" + 
-						"GROUP BY A.FaceID ) T", ReturnRate.class);
+				.createNativeQuery("SELECT SUM(CASE WHEN \"visitcount\" > 0 THEN 1 ELSE 0 END) AS \"returnVisit\", SUM(CASE WHEN \"visitcount\" > 0 THEN 0 ELSE 1 END) AS \"newVisit\"\r\n" + 
+						" FROM (SELECT SUM(CASE WHEN B.\"FaceID\" IS NULL THEN 0 ELSE 1 END) AS \"visitcount\", A.\"FaceID\" \r\n" + 
+						" FROM (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND  DAYS_BETWEEN(\"EnterTime\",?1) = 0 )\r\n" + 
+						" AS A \r\n" + 
+						" LEFT OUTER JOIN (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < NOW() AND \"EnterTime\" < ?1) AS B \r\n" + 
+						" ON A.\"FaceID\" = B.\"FaceID\" GROUP BY A.\"FaceID\") AS T;", ReturnRate.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, date);
@@ -290,18 +287,16 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<ReturnFrequency> GetReturnFrequencyByDate(String date) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery(" SELECT  SUM(CASE WHEN visitcount>0 THEN 1 ELSE 0 END) returnVisit,SUM(CASE WHEN visitcount>0 THEN 0 ELSE 1 END) newVisit,T.daytime,T.time\n" + 
-						"FROM( \n" + 
-						"select SUM(CASE WHEN B.FaceID is null then 0 else 1 end) AS visitcount,A.FaceID,Datepart(HOUR,A.EnterTime) time,CAST( convert(date,A.EnterTime) AS varchar(20)) daytime from \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0 \n" + 
-						") A left join \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime < ?1 \n" + 
-						") B on A.FaceID = B.FaceID\r\n" + 
-						"group by A.FaceID,Datepart(HOUR,A.EnterTime),CAST( convert(date,A.EnterTime) AS varchar(20)) \n" + 
-						" ) T \n" + 
-						" group by T.daytime,T.[time] order by daytime,time", ReturnFrequency.class);
+				.createNativeQuery("SELECT SUM(CASE WHEN \"visitcount\" > 0 THEN 1 ELSE 0 END) AS \"returnVisit\", SUM(CASE WHEN \"visitcount\" > 0 THEN 0 ELSE 1 END) \r\n" + 
+						"AS \"newVisit\", T.\"daytime\", T.\"time\" FROM (SELECT SUM(CASE WHEN B.\"FaceID\" IS NULL THEN 0 ELSE 1 END) \r\n" + 
+						"AS \"visitcount\", A.\"FaceID\", HOUR(A.\"EnterTime\") AS \"time\", CAST(CAST(A.\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\" \r\n" + 
+						"FROM (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND\r\n" + 
+						"  DAYS_BETWEEN(\"EnterTime\",?1) = 0)  AS A LEFT OUTER JOIN \r\n" + 
+						" (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND \"EnterTime\" < ?1) AS B ON A.\"FaceID\" = B.\"FaceID\"\r\n" + 
+						" group by A.\"FaceID\",HOUR(A.\"EnterTime\"),CAST(CAST(A.\"EnterTime\" AS date) AS varchar(20)) \r\n" + 
+						" ) AS T \r\n" + 
+						" group by T.\"daytime\",T.\"time\" order by \"daytime\",\"time\";", ReturnFrequency.class);
+		
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, date);
@@ -313,18 +308,15 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<ReturnFrequency> GetReturnFrequencyByWeek(String begin, String end) {
 		
 		Query query = this.entityManager	
-				.createNativeQuery(" SELECT  SUM(CASE WHEN visitcount>0 THEN 1 ELSE 0 END) returnVisit,SUM(CASE WHEN visitcount>0 THEN 0 ELSE 1 END) newVisit,T.daytime,T.time\n" + 
-						"FROM( \n" + 
-						"select SUM(CASE WHEN B.FaceID is null then 0 else 1 end) AS visitcount,A.FaceID,Datepart(HOUR,A.EnterTime) time,CAST( convert(date,A.EnterTime) AS varchar(20)) daytime from \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59' \n" + 
-						") A left join \n" + 
-						"(SELECT * FROM VisitRecord \n" + 
-						"WHERE  Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime < ?1 \n" + 
-						") B on A.FaceID = B.FaceID\r\n" + 
-						"group by A.FaceID,Datepart(HOUR,A.EnterTime),CAST( convert(date,A.EnterTime) AS varchar(20)) \n" + 
-						" ) T \n" + 
-						" group by T.daytime,T.[time] order by daytime,time", ReturnFrequency.class);
+				.createNativeQuery(" SELECT SUM(CASE WHEN \"visitcount\" > 0 THEN 1 ELSE 0 END) AS \"returnVisit\", SUM(CASE WHEN \"visitcount\" > 0 THEN 0 ELSE 1 END) \r\n" + 
+						"AS \"newVisit\", T.\"daytime\", T.\"time\" FROM (SELECT SUM(CASE WHEN B.\"FaceID\" IS NULL THEN 0 ELSE 1 END) \r\n" + 
+						"AS \"visitcount\", A.\"FaceID\", HOUR(A.\"EnterTime\") AS \"time\", CAST(CAST(A.\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\" \r\n" + 
+						"FROM (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND\r\n" + 
+						"   \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59')  AS A LEFT OUTER JOIN \r\n" + 
+						" (SELECT * FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL(CURRENT_UTCTIMESTAMP, 'UTC+8') AND \"EnterTime\" < ?1) AS B ON A.\"FaceID\" = B.\"FaceID\"\r\n" + 
+						" group by A.\"FaceID\",HOUR(A.\"EnterTime\"),CAST(CAST(A.\"EnterTime\" AS date) AS varchar(20)) \r\n" + 
+						" ) AS T \r\n" + 
+						" group by T.\"daytime\",T.\"time\" order by \"daytime\",\"time\";", ReturnFrequency.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);
@@ -336,10 +328,11 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	
 	public List<ConversionPipline> GetConversionPiplineByDate(String date) {
 		Query query = this.entityManager
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime, SUM(Case when Spent is null or Spent =0 then 0 else 1 end) value from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0 \n" + 
-						"group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)) order by time\n" +
-						"", ConversionPipline.class);
+				.createNativeQuery("SELECT HOUR(\"EnterTime\") AS \"time\", CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\", \r\n" + 
+						"SUM(CASE WHEN \"Spent\" IS NULL OR \"Spent\" = 0 THEN 0 ELSE 1 END) AS \"value\" FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 \r\n" + 
+						"AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' )\r\n" + 
+						"AND  DAYS_BETWEEN(\"EnterTime\",?1) = 0 \r\n" + 
+						"GROUP BY HOUR(\"EnterTime\"), CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) ORDER BY \"time\";", ConversionPipline.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, date);
@@ -353,9 +346,12 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 			return null;
 		}
 		Query query = this.entityManager	
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime,SUM(Case when Spent is null or Spent =0 then 0 else 1 end) value from VisitRecord\n" + 
-						"where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59' \n" + 
-						"group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)) order by daytime,time", ConversionPipline.class);
+				.createNativeQuery("SELECT HOUR(\"EnterTime\") AS \"time\", CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\", \r\n" + 
+						"SUM(CASE WHEN \"Spent\" IS NULL OR \"Spent\" = 0 THEN 0 ELSE 1 END) AS \"value\" FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 \r\n" + 
+						"AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' )\r\n" + 
+						"AND  \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59'\r\n" + 
+						"GROUP BY HOUR(\"EnterTime\"), CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) ORDER BY \"time\";\r\n" + 
+						"", ConversionPipline.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);
@@ -368,10 +364,10 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 	public List<Sentiment> GetSentimentByDate(String date) {
 	
 		Query query = this.entityManager	
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime,Emotion,COUNT(Emotion) value from VisitRecord \n" + 
-						"						where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and DateDiff(Day,EnterTime,?1) = 0 and Emotion is not null \n" + 
-						"						group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)),Emotion order by daytime,time \n" + 
-						"", Sentiment.class);
+				.createNativeQuery("SELECT HOUR(\"EnterTime\") AS \"time\", CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\", \"Emotion\" as \"emotion\",\r\n" + 
+						" COUNT(\"Emotion\") AS \"value\" FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' )\r\n" + 
+						" AND  DAYS_BETWEEN(\"EnterTime\",?1) = 0  AND \"Emotion\" IS NOT NULL \r\n" + 
+						" GROUP BY HOUR(\"EnterTime\"), CAST(CAST(\"EnterTime\" AS date) AS varchar(20)), \"Emotion\" ORDER BY \"daytime\", \"time\";", Sentiment.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, date);
@@ -385,10 +381,10 @@ public List<BounceRate> GetBounceRateByDate(String date) {
 			return null;
 		}
 		Query query = this.entityManager	
-				.createNativeQuery("select Datepart(HOUR,EnterTime) time,CAST( convert(date,EnterTime) AS varchar(20)) daytime,Emotion,COUNT(Emotion) value from VisitRecord \n" + 
-						"						where Datepart(HOUR,EnterTime)>=9 and EnterTime < GETDATE() and EnterTime > ?1 and EnterTime < ?2 +' 23:59:59'  and Emotion is not null \n" + 
-						"						group by Datepart(HOUR,EnterTime),CAST( convert(date,EnterTime) AS varchar(20)),Emotion order by daytime,time \n" + 
-						"", Sentiment.class);
+				.createNativeQuery("SELECT HOUR(\"EnterTime\") AS \"time\", CAST(CAST(\"EnterTime\" AS date) AS varchar(20)) AS \"daytime\", \"Emotion\" as \"emotion\",\r\n" + 
+						" COUNT(\"Emotion\") AS \"value\" FROM \"VisitRecord\" WHERE HOUR(\"EnterTime\") >= 9 AND \"EnterTime\" < UTCTOLOCAL (CURRENT_UTCTIMESTAMP, 'UTC+8' )\r\n" + 
+						" AND   \"EnterTime\" > ?1 AND \"EnterTime\" < ?2 || ' 23:59:59'  AND \"Emotion\" IS NOT NULL \r\n" + 
+						" GROUP BY HOUR(\"EnterTime\"), CAST(CAST(\"EnterTime\" AS date) AS varchar(20)), \"Emotion\" ORDER BY \"daytime\", \"time\";", Sentiment.class);
 		
         query.setHint(QueryHints.HINT_CACHEABLE, "false");
         query.setParameter(1, begin);

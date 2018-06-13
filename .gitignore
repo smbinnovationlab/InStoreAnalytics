@@ -1,1 +1,12 @@
 *.DS_Store
+analytics-server-java/.gradle/
+camera-server-python/face_process/models/weights.18-4.06.hdf5
+camera-server-python/face_process/models/new_freeze.pb
+analytics-server-java/ServerCenter/build/
+analytics-server-java/ServerCenter/.settings/
+analytics-server-java/ServerCenter/.classpath
+analytics-server-java/ServerCenter/.project
+analytics-server-java/ServerInterface/.classpath
+analytics-server-java/ServerInterface/.project
+analytics-server-java/ServerInterface/.settings/
+analytics-server-java/ServerInterface/build/
