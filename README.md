@@ -101,6 +101,53 @@ You have enabled the followings on your computer:
     ```
 4. In any browser, go to http://IP:8080/client/index.html
 
+
+## Build and deploy to SAP HCP
+1. Clone or dowload source code from the repo
+2. Change /ServerCenter/src/main/resources/application.properties
+    1. Change db.type=SQL into db.type=HANA
+    2. Uncomment spring.datasource.jndi-name and spring.jpa.properties.hibernate.dialect
+    3. Comment the MSSQL connection string
+
+3. Execute the following command:  
+    ```console
+        gradle build -Denv=cloud
+    ```
+4. Go to camera-server-python and modify the server.py 
+    1. Uncomment the below sentence
+    ```console
+        remote.set_base_url(analytcsi_server_url)
+    syncb1 = AutoSyncB1(analytcsi_server_url,service_layer_url,service_layer_company,service_layer_username,service_layer_password,face_api,q)
+    syncb1.run()
+    ```
+    2. Fill the service_layer_url, service_layer_company, service_layer_username, service_layer_password and analytcsi_server_url
+5. Register a HCP account and login https://account.hanatrial.ondemand.com/cockpit
+6. Select one NEO region. It currenlty only support NEO rather cloud foundary.
+7. Follow HCP link to deploy the ServerCenter-0.0.1.war file. https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/e5dfbc6cbb5710149279f67fb43d4e5d.html
+8. Request a HANA instance in HCP.
+9. New a database and named SHOPDB
+![image](https://raw.githubusercontent.com/smbinnovationlab/InStoreAnalytics/master/1.png)
+10. Execute the DBCreate_HANA.sql in this DB via SAP HANA Web-Based Development Workbench
+11. Start the web application in HCP
+12. Configure the Service Layer to allow uploading attachment.
+13. Create the Business Partner which will be sync as VIP person
+![image](https://raw.githubusercontent.com/smbinnovationlab/InStoreAnalytics/master/2.png)
+
+15. Upload his image to B1 via Service Layer. Please note that the image should only contain one person.
+16. Create the items and upload item images via Service Layer.
+17. Please input the item name, pricce and remark.
+![image](https://raw.githubusercontent.com/smbinnovationlab/InStoreAnalytics/master/3.png)
+
+2. Execute the following command to start the python server:
+    ```console
+        python server.py
+    ```
+18. The python server will start the camera and sync B1 data with In-Store Analytics.
+19. Open the web url
+    https://**++YourHCPServer++**/ServerCenter-0.0.1/client/index.html
+    
+20. [Optional] Open "https://**++YourHCPServer++**/ServerCenter-0.0.1/app/ShopReport/mock" which will triger the server to generate mock data.
+
 ## Tips
 - In-Store Analytics is a loosely coupled solution. Currently we provide the mock up data, but you can integrate this solution with your ERP system (e.g. SAP Business One, SAP ByDesign etc.)
 - If you want to deploy the analytics server (pure java application) in SAP Cloud Platform. You could follow this [link](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/e5dfbc6cbb5710149279f67fb43d4e5d.html)
@@ -109,4 +156,3 @@ You have enabled the followings on your computer:
 
 ## License
 In-Store Analytics is released under the terms of the MIT license. For more information, see LICENSE or visit https://opensource.org/licenses/MIT.
-
