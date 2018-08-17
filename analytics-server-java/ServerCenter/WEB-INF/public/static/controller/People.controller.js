@@ -376,8 +376,8 @@ sap.ui.define([
             }
             people.previousVisits = aPreviousRecords;
             
-          //var aRecommends = di.getRecommendations(people.gender, people.age, people.recentEmotion, people.visitCount);
-            var aRecommends = b1Recommand.getRecommendations(people.gender, people.age, people.recentEmotion, people.visitCount);
+            var aRecommends = di.getRecommendations(people.gender, people.age, people.recentEmotion, people.visitCount);
+            //var aRecommends = b1Recommand.getRecommendations(people.gender, people.age, people.recentEmotion, people.visitCount);
             var discount = (people.type === "vip") ? 0.15 : (people.countTextVisible ? 0.08 : 0);
             aRecommends.map(recom => {
                 recom.oldPrice = discount === 0 ? null : recom.price;
