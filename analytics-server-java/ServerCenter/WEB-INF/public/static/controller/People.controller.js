@@ -8,6 +8,7 @@ sap.ui.define([
     "../js/Utility",
     "../js/B1Recommand",
     "../js/DI"
+    // "../js/PerfumeDI"
 ], function(BaseTabContent, JSONModel, Dialog, List, StandardListItem, Button, Utility, DI) {
     'use strict';
     
