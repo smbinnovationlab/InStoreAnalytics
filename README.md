@@ -148,6 +148,12 @@ You have enabled the followings on your computer:
     
 20. [Optional] Open "https://**++YourHCPServer++**/ServerCenter-0.0.1/app/ShopReport/mock" which will triger the server to generate mock data.
 
+## Connect With WeChat. (Advertisement based on Face Recognition)
+![image](https://res.wx.qq.com/wxopenres/htmledition/images/bg/bg_logo_primary4268a4.svg)
+1. Register WeChat public account
+2. Connect the public account service with InStoreAnalytcis.
+3. Send the notification via WeChat when recognized the customer's face
+
 ## Tips
 - In-Store Analytics is a loosely coupled solution. Currently we provide the mock up data, but you can integrate this solution with your ERP system (e.g. SAP Business One, SAP ByDesign etc.)
 - If you want to deploy the analytics server (pure java application) in SAP Cloud Platform. You could follow this [link](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/e5dfbc6cbb5710149279f67fb43d4e5d.html)
