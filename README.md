@@ -152,7 +152,7 @@ You have enabled the followings on your computer:
 ![image](https://raw.githubusercontent.com/smbinnovationlab/InStoreAnalytics/master/bg_wechat.png)
 1. Register WeChat public account
 2. Connect the public account service with InStoreAnalytcis.
-3. Send the notification via WeChat when recognized the customer's face
+3. Send the advertisement via WeChat when recognized the customer's face
 
 ## Tips
 - In-Store Analytics is a loosely coupled solution. Currently we provide the mock up data, but you can integrate this solution with your ERP system (e.g. SAP Business One, SAP ByDesign etc.)
