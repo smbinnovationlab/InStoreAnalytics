@@ -149,7 +149,7 @@ You have enabled the followings on your computer:
 20. [Optional] Open "https://**++YourHCPServer++**/ServerCenter-0.0.1/app/ShopReport/mock" which will triger the server to generate mock data.
 
 ## Connect With WeChat. (Advertisement based on Face Recognition)
-![image](https://res.wx.qq.com/wxopenres/htmledition/images/bg/bg_logo_primary4268a4.svg)
+![image](https://raw.githubusercontent.com/smbinnovationlab/InStoreAnalytics/master/bg_wechat.png)
 1. Register WeChat public account
 2. Connect the public account service with InStoreAnalytcis.
 3. Send the notification via WeChat when recognized the customer's face
